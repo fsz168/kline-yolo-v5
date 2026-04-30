@@ -32,7 +32,7 @@ def main():
         imgsz=args.imgsz,
         patience=30,
         batch=2,
-        device="cpu",
+        device="auto",
         workers=2,
         project="runs/detect",
         name="train",
