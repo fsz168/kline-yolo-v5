@@ -1,0 +1,17 @@
+# K线形态识别数据集
+path: ./dataset
+train: images/train
+val: images/val
+test: images/test
+
+nc: 9
+names:
+  0: engulfing
+  1: morning_star
+  2: evening_star
+  3: piercing_line
+  4: dark_cloud
+  5: pin_bar
+  6: w_bottom
+  7: flat_bottom
+  8: continuation

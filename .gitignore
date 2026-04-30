@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+build/
+runs/
+wandb/
+*.pt
+yolov8*.pt
+weights/
+downloads/

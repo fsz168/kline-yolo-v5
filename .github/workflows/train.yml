@@ -1,0 +1,72 @@
+name: K-Line Pattern YOLO Training
+
+on:
+  workflow_dispatch:
+    inputs:
+      epochs:
+        description: '训练轮数'
+        default: '200'
+        required: false
+      imgsz:
+        description: '图片尺寸'
+        default: '640'
+        required: false
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: 安装依赖
+        run: pip install ultralytics pillow tqdm
+
+      - name: 下载预训练权重
+        run: |
+          python -c "
+          from ultralytics import YOLO
+          model = YOLO('yolov8n.pt')
+          print('权重下载成功')
+          "
+
+      - name: 上传数据集
+        uses: actions/upload-artifact@v4
+        with:
+          name: kline-dataset
+          path: dataset/
+          retention-days: 1
+
+      - name: 训练YOLO
+        run: |
+          python train_kline.py             --epochs ${{ inputs.epochs || '200' }}             --imgsz ${{ inputs.imgsz || '640' }}
+
+      - name: 上传训练结果
+        uses: actions/upload-artifact@v4
+        with:
+          name: yolo-results
+          path: runs/detect/train/
+          retention-days: 7
+
+      - name: 下载最佳权重
+        uses: actions/download-artifact@v4
+        with:
+          name: yolo-results
+          path: ./downloads
+
+      - name: 发布权重
+        uses: softprops/action-gh-release@v1
+        with:
+          files: downloads/weights/best.pt
+          tag_name: v1.0-kline
+          name: K-Line YOLOv8n 预训练权重
+          body: "K线形态识别YOLOv8n预训练权重，训练数据：50张ETF标注样本+200张生成样本，共6类形态"
