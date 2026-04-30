@@ -27,7 +27,7 @@ def main():
 
     # 训练配置
     train_args = dict(
-        data="src/dataset.yaml",  # 正确路径: src/dataset.yaml
+        data="dataset/dataset.yaml",  # 正确路径: dataset/dataset.yaml
         epochs=args.epochs,
         imgsz=args.imgsz,
         patience=30,
