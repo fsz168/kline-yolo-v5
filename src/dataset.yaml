@@ -1,14 +1,16 @@
-path: /root/kline-yolo-yolo/src/dataset
+path: ../dataset
 train: images/train
 val: images/val
 test: images/test
 
-nc: 7
+nc: 9
 names:
-  0: BE      # Bullish Engulfing  看涨吞没
-  1: BE_B    # Bearish Engulfing 看跌吞没
-  2: MS      # Morning Star       晨星
-  3: ES      # Evening Star       晚星
-  4: PI      # Piercing Line      刺穿线
-  5: CC      # Consecutive Bullish 连续阳线
-  6: FH      # Flat Bottom        平头底
+  0: engulfing
+  1: morning_star
+  2: evening_star
+  3: piercing_line
+  4: dark_cloud
+  5: pin_bar
+  6: w_bottom
+  7: flat_bottom
+  8: continuation
