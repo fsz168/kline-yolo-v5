@@ -1,21 +1,27 @@
 name: K-Line Pattern YOLO Training
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - '**.py'
-      - 'dataset/**'
-      - '.github/workflows/**'
+  repository_dispatch:
+    types: [train-yolo]
+  workflow_dispatch:
+    inputs:
+      epochs:
+        description: '训练轮数'
+        required: false
+        default: '150'
+      imgsz:
+        description: '图片尺寸'
+        required: false
+        default: '640'
 
 jobs:
   train:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      packages: write
-      pull-requests: write
       contents: write
+      pages: none
+      pull-requests: write
+      id-token: none
 
     steps:
       - name: 检出代码
@@ -27,12 +33,28 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: 安装依赖 + 下载预训练权重 + 训练
+      - name: 安装依赖
         run: |
-          set -e
           pip install ultralytics pillow tqdm
-          python -c "from ultralytics import YOLO; model = YOLO('yolov8n.pt'); print('预训练权重下载成功')"
-          python train_kline.py --epochs 150 --imgsz 640
+
+      - name: 验证数据集
+        run: |
+          echo "=== 验证数据集路径 ==="
+          ls -la dataset/dataset.yaml
+          ls dataset/images/train/*.png | wc -l
+          ls dataset/images/val/*.png | wc -l
+          ls dataset/labels/train/*.txt | wc -l
+          echo "=== 验证YAML内容 ==="
+          cat dataset/dataset.yaml
+
+      - name: 下载预训练权重
+        run: |
+          python -c "from ultralytics import YOLO; model = YOLO('yolov8n.pt'); print('✓ 预训练权重 yolov8n.pt 下载成功')"
+
+      - name: 训练模型
+        run: |
+          echo "=== 开始训练 ==="
+          python train_kline.py --epochs ${{ github.event.inputs.epochs || '150' }} --imgsz ${{ github.event.inputs.imgsz || '640' }}
 
       - name: 上传训练结果
         if: always()
@@ -51,4 +73,10 @@ jobs:
           files: weights/best.pt
           tag_name: v1.0-kline
           name: K-Line YOLOv8n Pretrained Weight
-          body: "K线形态识别YOLOv8n预训练权重，基于107张周线标注样本"
+          body: "K线形态识别YOLOv8n预训练权重，基于周线标注样本"
+
+      - name: 上传到GitHub Pages
+        if: success()
+        run: |
+          echo "YOLO训练完成！"
+          ls -la weights/best.pt
