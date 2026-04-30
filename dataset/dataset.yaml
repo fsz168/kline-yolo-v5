@@ -1,10 +1,10 @@
-path: ./dataset
-train: images/train
-val: images/val
+path: .
+train: dataset/images/train
+val: dataset/images/val
 
-nc: 7
+nc: 4
 names:
-  0: engulfing      # BE 看涨吞没
-  1: evening_star   # ES 晚星
-  2: continuation   # CC 连续阳线
-  3: flat_bottom     # FH 平头底
+  0: engulfing
+  1: evening_star
+  2: continuation
+  3: flat_bottom
