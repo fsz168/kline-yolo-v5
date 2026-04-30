@@ -1,17 +1,10 @@
-# K线形态识别数据集
 path: ./dataset
 train: images/train
 val: images/val
-test: images/test
 
-nc: 9
+nc: 7
 names:
-  0: engulfing
-  1: morning_star
-  2: evening_star
-  3: piercing_line
-  4: dark_cloud
-  5: pin_bar
-  6: w_bottom
-  7: flat_bottom
-  8: continuation
+  0: engulfing      # BE 看涨吞没
+  1: evening_star   # ES 晚星
+  2: continuation   # CC 连续阳线
+  3: flat_bottom     # FH 平头底

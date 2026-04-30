@@ -27,13 +27,13 @@ def main():
 
     # 训练配置
     train_args = dict(
-        data="dataset/dataset.yaml",  # 正确路径: dataset/dataset.yaml (GitHub Actions中)
+        data="src/dataset.yaml",  # 正确路径: src/dataset.yaml
         epochs=args.epochs,
         imgsz=args.imgsz,
         patience=30,
-        batch=8 if not is_cpu_only else 2,
-        device=0 if not is_cpu_only else "cpu",
-        workers=4 if not is_cpu_only else 2,
+        batch=2,
+        device="cpu",
+        workers=2,
         project="runs/detect",
         name="train",
         exist_ok=True,
