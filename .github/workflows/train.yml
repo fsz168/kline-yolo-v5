@@ -1,16 +1,10 @@
 name: K-Line Pattern YOLO Training
 
 on:
-  workflow_dispatch:
-    inputs:
-      epochs:
-        description: '训练轮数'
-        default: '200'
-        required: false
-      imgsz:
-        description: '图片尺寸'
-        default: '640'
-        required: false
+  repository_dispatch:
+    types: [train-trigger]
+  push:
+    branches: [main]
 
 jobs:
   train:
@@ -48,7 +42,7 @@ jobs:
 
       - name: 训练YOLO
         run: |
-          python train_kline.py             --epochs ${{ inputs.epochs || '200' }}             --imgsz ${{ inputs.imgsz || '640' }}
+          python train_kline.py --epochs 150 --imgsz 640
 
       - name: 上传训练结果
         uses: actions/upload-artifact@v4
@@ -68,5 +62,5 @@ jobs:
         with:
           files: downloads/weights/best.pt
           tag_name: v1.0-kline
-          name: K-Line YOLOv8n 预训练权重
-          body: "K线形态识别YOLOv8n预训练权重，训练数据：50张ETF标注样本+200张生成样本，共6类形态"
+          name: K-Line YOLOv8n Pretrained Weight
+          body: "K线形态识别YOLOv8n预训练权重，基于55张周线标注样本"
