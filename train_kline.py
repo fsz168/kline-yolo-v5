@@ -32,7 +32,7 @@ def main():
         imgsz=args.imgsz,
         patience=30,
         batch=2,
-        device="auto",
+        device="cpu" if is_cpu_only else "cuda:0",
         workers=2,
         project="runs/detect",
         name="train",
